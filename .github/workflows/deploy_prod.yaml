@@ -1,0 +1,26 @@
+name: Deploy to Prod Kubernetes Cluster
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ main ]
+jobs:
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ secrets.DIGITALOCEAN_CLUSTER }}
+      - name: docker registry login
+        run: doctl registry login --expiry-seconds 3600
+      - name: run skaffold
+        uses: yokawasa/action-setup-kube-tools@v0.7.1
+        with:
+          skaffold: '1.38.0'
+      - run: skaffold run -p prod
