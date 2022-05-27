@@ -5,6 +5,7 @@ on:
     branches: [ dev ]
 jobs:
   deploy:
+    if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     environment: dev
     steps:
