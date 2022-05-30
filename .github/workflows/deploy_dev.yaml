@@ -36,7 +36,7 @@ jobs:
         run: kubectl config use-context $CLUSTER_CONTEXT
       - name: Add secrets to k8s 
         run: |
-          if [ $HAS_SECRETS == 'true' ];
+          if [ $HAS_SECRETS == 'true' ]
           then
             touch secret-envs.txt | echo $K8S_SECRETS | base64 --decode > ./secret-envs.txt
             cat ./secret-envs.txt
@@ -48,7 +48,7 @@ jobs:
             echo $SECRET_VALUE > k8s/dev/private/$SECRET_NAME.env
             printf %s $(< k8s/dev/private/$SECRET_NAME.env) > k8s/dev/private/$SECRET_NAME.env
             echo "      - $SECRET_NAME=private/$SECRET_NAME.env" | tee -a k8s/dev/kustomization.yaml
-            done < secret-envs.txt ;
+            done < secret-envs.txt 
           fi
       - name: verify Kustomization
         run: cat k8s/dev/kustomization.yaml
