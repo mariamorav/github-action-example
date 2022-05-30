@@ -34,7 +34,7 @@ jobs:
         run: kubectl config get-contexts
       - name: Use context
         run: kubectl config use-context $CLUSTER_CONTEXT
-      - if: HAS_SECRETS
+      - if: secrets.HAS_SECRETS
         name: Add secrets to k8s 
         run: |
           touch secret-envs.txt | echo $K8S_SECRETS | base64 --decode > ./secret-envs.txt
