@@ -11,13 +11,13 @@ The secrets needed for this workflow are:
 
 `Deploy dev` workflow is for deploy the service to the cluster using skaffold. It needs the following secrets:
 
-- KUBE_CONFIG
-- CLUSTER_CONTEXT
-- HARBOR_URL
+- HARBOR_URL = url of harbor to upload docker images.
 - HARBOR_PASSWORD
 - HARBOR_USERNAME
-- K8S_SECRETS
-- HAS_SECRETS
+- K8S_SECRETS= base64 key=value secrets of service.
+- HAS_SECRETS= true or false. Flag to know if is needed to read and upload K8S_SECRETS.
+- DIGITALOCEAN_ACCESS_TOKEN= access token generated in Digital Ocean.
+- DIGITALOCEAN_CLUSTER_ID= id of cluster to get kubeconfig from digital ocean.
 
 ## Branch protection rules
 

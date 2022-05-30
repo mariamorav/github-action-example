@@ -9,32 +9,28 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      CLUSTER_CONTEXT: ${{ secrets.CLUSTER_CONTEXT }}
       HARBOR_URL: ${{ secrets.HARBOR_URL }}
       HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
       HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
       HAS_SECRETS: ${{ secrets.HAS_SECRETS }} # BOOLEAN TO KNOW IF THE SERVICE NEEDS SECRET ENVS
       K8S_SECRETS: ${{ secrets.K8S_SECRETS }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          token: $DIGITALOCEAN_ACCESS_TOKEN
       - name: Save DigitalOcean kubeconfig
-        run: doctl kubernetes cluster kubeconfig save ${{ secrets.DIGITALOCEAN_CLUSTER }}
+        run: doctl kubernetes cluster kubeconfig save $DIGITALOCEAN_CLUSTER_ID
       - name: Install tools for deployment
         uses: yokawasa/action-setup-kube-tools@v0.7.1
         with:
           skaffold: '1.38.0'
       - name: Docker login Harbor
         run: docker login $HARBOR_URL -u=$HARBOR_USERNAME -p=$HARBOR_PASSWORD 
-      - name: List contexts 
-        run: kubectl config get-contexts
-      - name: Use context
-        run: kubectl config use-context $CLUSTER_CONTEXT
       - name: Add secrets to k8s 
         run: |
           if [ $HAS_SECRETS == 'true' ]
