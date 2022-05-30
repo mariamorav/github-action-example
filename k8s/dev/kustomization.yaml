@@ -23,7 +23,9 @@ configMapGenerator:
       - PORT="5050"
 
 secretGenerator:
-  - name: secrets-envs
+  - name: secret-envs
     behavior: merge
     type: Opaque
     #files:
+    #  - API_KEY=private/API_KEY.env
+    #  - SECRET_KEY=private/SECRET_KEY.env
