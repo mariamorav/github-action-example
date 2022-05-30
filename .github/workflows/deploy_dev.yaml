@@ -14,17 +14,15 @@ jobs:
       HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
       HAS_SECRETS: ${{ secrets.HAS_SECRETS }} # BOOLEAN TO KNOW IF THE SERVICE NEEDS SECRET ENVS
       K8S_SECRETS: ${{ secrets.K8S_SECRETS }}
-      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: $DIGITALOCEAN_ACCESS_TOKEN
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Save DigitalOcean kubeconfig
-        run: doctl kubernetes cluster kubeconfig save $DIGITALOCEAN_CLUSTER_ID
+        run: doctl kubernetes cluster kubeconfig save ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
       - name: Install tools for deployment
         uses: yokawasa/action-setup-kube-tools@v0.7.1
         with:
