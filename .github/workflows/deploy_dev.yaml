@@ -37,8 +37,7 @@ jobs:
             do
             SECRET_NAME=$(echo $secret)
             echo "secrets.$SECRET_NAME"
-            SECRET=$(echo "{{ secrets.$SECRET_NAME }}")
-            SECRET_VALUE="$${SECRET}"
+            SECRET_VALUE="${{ secrets.${SECRET_NAME} }}"
             echo "Secret value:: $SECRET_VALUE"
             echo $SECRET_VALUE > k8s/dev/private/$SECRET_NAME.env
             printf %s $(< k8s/dev/private/$SECRET_NAME.env) > k8s/dev/private/$SECRET_NAME.env
