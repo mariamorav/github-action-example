@@ -36,7 +36,10 @@ jobs:
             while IFS= read -r secret
             do
             SECRET_NAME=$(echo $secret)
-            SECRET_VALUE=${{ secrets.{$SECRET_NAME} }}
+            echo "secrets.$SECRET_NAME"
+            SECRET=$(echo "{{ secrets.$SECRET_NAME }}")
+            SECRET_VALUE=$SECRET
+            echo "Secret value:: $SECRET_VALUE"
             echo $SECRET_VALUE > k8s/dev/private/$SECRET_NAME.env
             printf %s $(< k8s/dev/private/$SECRET_NAME.env) > k8s/dev/private/$SECRET_NAME.env
             echo "      - $SECRET_NAME=private/$SECRET_NAME.env" | tee -a k8s/dev/kustomization.yaml
