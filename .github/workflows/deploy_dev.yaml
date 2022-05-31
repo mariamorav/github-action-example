@@ -43,7 +43,7 @@ jobs:
             echo $SECRET_VALUE > k8s/dev/private/$SECRET_NAME.env
             printf %s $(< k8s/dev/private/$SECRET_NAME.env) > k8s/dev/private/$SECRET_NAME.env
             echo "      - $SECRET_NAME=private/$SECRET_NAME.env" | tee -a k8s/dev/kustomization.yaml
-            done < secrets-list.txt 
+            done < secrets_list.txt 
           fi
       - name: verify Kustomization
         run: cat k8s/dev/kustomization.yaml
