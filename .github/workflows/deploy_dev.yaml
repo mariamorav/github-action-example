@@ -13,7 +13,6 @@ jobs:
       HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
       HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
       HAS_SECRETS: ${{ secrets.HAS_SECRETS }} # BOOLEAN TO KNOW IF THE SERVICE NEEDS SECRET ENVS
-      K8S_SECRETS: ${{ secrets.K8S_SECRETS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
