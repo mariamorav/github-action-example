@@ -1,13 +1,13 @@
-name: Deploy to Dev Kubernetes Cluster
+name: Deploy to test Kubernetes Cluster
 on:
   pull_request:
     types: [ closed ]
-    branches: [ dev ]
+    branches: [ test ]
 jobs:
   deploy:
     if: github.event.pull_request.merged
     runs-on: ubuntu-latest
-    environment: dev
+    environment: test
     env:
       HARBOR_URL: ${{ secrets.HARBOR_URL }}
       HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
@@ -35,17 +35,17 @@ jobs:
           then
             touch secret-envs.txt | echo $K8S_SECRETS | base64 --decode > ./secret-envs.txt
             cat ./secret-envs.txt
-            echo "    files:" | tee -a k8s/dev/kustomization.yaml
+            echo "    files:" | tee -a k8s/test/kustomization.yaml
             while IFS= read -r secret
             do
             SECRET_NAME=$(echo $secret | cut -d '=' -f 1)
             SECRET_VALUE=$(echo $secret | cut -d '=' -f 2)
-            echo $SECRET_VALUE > k8s/dev/private/$SECRET_NAME.env
-            printf %s $(< k8s/dev/private/$SECRET_NAME.env) > k8s/dev/private/$SECRET_NAME.env
-            echo "      - $SECRET_NAME=private/$SECRET_NAME.env" | tee -a k8s/dev/kustomization.yaml
+            echo $SECRET_VALUE > k8s/test/private/$SECRET_NAME.env
+            printf %s $(< k8s/test/private/$SECRET_NAME.env) > k8s/test/private/$SECRET_NAME.env
+            echo "      - $SECRET_NAME=private/$SECRET_NAME.env" | tee -a k8s/test/kustomization.yaml
             done < secret-envs.txt 
           fi
       - name: verify Kustomization
-        run: cat k8s/dev/kustomization.yaml
-      - name: Run skaffold
-        run: skaffold run -p dev
+        run: cat k8s/test/kustomization.yaml
+      - name: Run skaffold test
+        run: skaffold run -p test
